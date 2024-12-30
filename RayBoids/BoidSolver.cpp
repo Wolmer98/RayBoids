@@ -37,8 +37,8 @@ void BoidSolver::Update(float deltaTime)
 				Vector2 separationResult = CalculateSeparation(boid, closeBoids);
 				Vector2 alignmentResult = CalculateAlignment(boid, closeBoids);
 				Vector2 cohesionResult = CalculateCohesion(boid, closeBoids);
+				Vector2 cursorResult = CalculateAttractPoints(boid);
 				Vector2 borderResult = CalculateBorderAvoidance(boid);
-				Vector2 cursorResult = CalculateCursorAttract(boid);
 
 				boid.velocity += separationResult + alignmentResult + cohesionResult + borderResult + cursorResult;
 				boid.velocity = Vector2ClampValue(boid.velocity, -700, 700);
@@ -47,6 +47,13 @@ void BoidSolver::Update(float deltaTime)
 			}
 		//});
 	}
+}
+
+void BoidSolver::AddAttractPoint(AttractPoint& point)
+{
+	m_attractPoints.push_front(point);
+	if (m_attractPoints.size() > 3)
+		m_attractPoints.pop_back();
 }
 
 Vector2 BoidSolver::CalculateSeparation(BoidData& inBoid, std::vector<BoidData*>& closeBoids)
@@ -95,9 +102,24 @@ Vector2 BoidSolver::CalculateBorderAvoidance(BoidData& inBoid)
 	return result;
 }
 
-Vector2 BoidSolver::CalculateCursorAttract(BoidData& inBoid)
+Vector2 BoidSolver::CalculateAttractPoints(BoidData& inBoid)
 {
-	return (GetMousePosition() - inBoid.position) * 0.08f;
+	if (m_attractPoints.size() <= 0)
+		return { 0,0 };
+
+	Vector2 result = { 0,0 };
+	float distance = std::numeric_limits<float>::max();
+	for (auto& point : m_attractPoints)
+	{
+		float newDistance = Vector2DistanceSqr(inBoid.position, point.position);
+		if (newDistance < distance)
+		{
+			distance = newDistance;
+			result = point.position;
+		}
+	}
+
+	return (result - inBoid.position) * 0.08f;
 }
 
 void BoidSolver::GetCloseBoids(Vector2 position, std::vector<BoidData*>& closeBoids)
@@ -158,14 +180,32 @@ void BoidSolver::BuildGrid(std::array<std::array<std::vector<BoidData*>, GRIDHEI
 	//}
 }
 
+void BoidSolver::RenderBoids()
+{
+	for (auto& boid : GetBoidData())
+	{
+		DrawCircle(boid.position.x, boid.position.y, 1, YELLOW);
+		//DrawLine(boid.position.x, boid.position.y, boid.position.x + boid.velocity.x, boid.position.y + boid.velocity.y, DARKBROWN); // Render velocities
+	}
+}
+
+void BoidSolver::RenderAttractPoints()
+{
+	if (m_attractPoints.size() <= 0)
+		return;
+
+	for (auto& point : m_attractPoints)
+		DrawCircle(point.position.x, point.position.y, 10, RAYWHITE);
+}
+
 void BoidSolver::RenderGrid()
 {
 	for (int y = 0; y < GRIDHEIGHT; ++y)
 	{
 		for (int x = 0; x < GRIDWIDTH; ++x)
 		{
-			DrawRectangleLines(x * GRIDCELLSIZE, y * GRIDCELLSIZE, GRIDCELLSIZE - 1, GRIDCELLSIZE - 1, m_grid[x][y].size() > 0 ? PURPLE : BLACK);
-			DrawText(std::format("{}", m_grid[x][y].size()).c_str(), x * GRIDCELLSIZE, y * GRIDCELLSIZE, 20, BLACK);
+			DrawRectangleLines(x * GRIDCELLSIZE, y * GRIDCELLSIZE, GRIDCELLSIZE - 1, GRIDCELLSIZE - 1, m_grid[x][y].size() > 0 ? PURPLE : DARKGRAY);
+			DrawText(std::format("{}", m_grid[x][y].size()).c_str(), x * GRIDCELLSIZE, y * GRIDCELLSIZE, 12, LIGHTGRAY);
 		}
 	}
 }
