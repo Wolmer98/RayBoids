@@ -13,7 +13,9 @@ int main()
     SetTargetFPS(300);
 
     BoidSolver* solver = new BoidSolver();
-    solver->Init(500, screenWidth, screenHeight);
+    solver->Init(100, screenWidth, screenHeight);
+    AttractPoint centerPoint = { { screenWidth / 2.0f, screenHeight / 2.0f } };
+    solver->AddAttractPoint(centerPoint);
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
