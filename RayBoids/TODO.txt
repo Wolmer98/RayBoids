@@ -1,0 +1,2 @@
+* Map reader/loader
+* Detract points (walls should be detracting boids and collider with player)
