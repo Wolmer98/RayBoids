@@ -2,20 +2,27 @@
 
 #include "raylib.h"
 #include "BoidSolver.h"
+#include "Player.h"
 
 int main()
 {
     const int screenWidth = 1200;
     const int screenHeight = 800;
 
-    InitWindow(screenWidth, screenHeight, "Dots");
+    InitWindow(screenWidth, screenHeight, "Fireflies");
 
     SetTargetFPS(300);
 
-    BoidSolver* solver = new BoidSolver();
-    solver->Init(100, screenWidth, screenHeight);
-    AttractPoint centerPoint = { { screenWidth / 2.0f, screenHeight / 2.0f } };
-    solver->AddAttractPoint(centerPoint);
+    auto solver = std::make_unique<BoidSolver>();
+    solver->Init(1000, screenWidth, screenHeight);
+    std::vector<AttractPoint> attractPoints;
+    std::vector<AttractPoint> turnInPoints;
+
+    AttractPoint testTurnIn = { screenWidth - 50.0f, screenHeight - 50.0f, 0.0f, 100.0f };
+    turnInPoints.push_back(testTurnIn);
+    solver->SetTurnInPoints(turnInPoints);
+
+    auto player = std::make_unique<Player>();
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -24,19 +31,25 @@ int main()
         if (!IsKeyDown(KEY_SPACE))
             solver->Update(GetFrameTime());
 
-        if (IsMouseButtonPressed(0))
-        {
-            AttractPoint point = { GetMousePosition() };
-            solver->AddAttractPoint(point);
-        }
+        player->ProcessInput();
+
+        AttractPoint centerPoint = { { screenWidth / 4.0f, screenHeight / 4.0f }, 100.0f, 50.0f };
+        attractPoints.push_back(centerPoint);
+
+        AttractPoint playerAttractPoint = { player->GetPosition(), 200.0f, player->GetAttractRadius()};
+        attractPoints.push_back(playerAttractPoint);
+
+        solver->SetAttractPoints(attractPoints);
+        attractPoints.clear();
 
         // Draw
         BeginDrawing();
         ClearBackground(RAYWHITE);
         DrawRectangleGradientV(0, 0, screenWidth, screenHeight, DARKGRAY, BLACK);
 
-        solver->RenderAttractPoints();
+        //solver->RenderAttractPoints();
         solver->RenderBoids();
+        player->Render();
 
         // Debug
         if (IsKeyDown(KEY_G))

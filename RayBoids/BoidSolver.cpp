@@ -31,6 +31,15 @@ void BoidSolver::Update(float deltaTime)
 			{
 				auto& boid = GetBoidData()[boidIndex];
 
+				if (boid.turnedIn)
+					continue;
+
+				if (ShouldBoidTurnIn(boid))
+				{
+					boid.turnedIn = true;
+					continue;
+				}
+
 				closeBoids.clear();
 				GetCloseBoids(boid.position, closeBoids);
 
@@ -41,7 +50,7 @@ void BoidSolver::Update(float deltaTime)
 				Vector2 borderResult = CalculateBorderAvoidance(boid);
 
 				boid.velocity += separationResult + alignmentResult + cohesionResult + borderResult + cursorResult;
-				boid.velocity = Vector2ClampValue(boid.velocity, -700, 700);
+				boid.velocity = Vector2ClampValue(boid.velocity, -300, 300);
 				//boid.velocity *= 0.98f;
 				boid.position += boid.velocity * deltaTime;
 			}
@@ -49,11 +58,14 @@ void BoidSolver::Update(float deltaTime)
 	}
 }
 
-void BoidSolver::AddAttractPoint(AttractPoint& point)
+void BoidSolver::SetAttractPoints(std::vector<AttractPoint>& points)
 {
-	m_attractPoints.push_front(point);
-	if (m_attractPoints.size() > 3)
-		m_attractPoints.pop_back();
+	m_attractPoints = points;
+}
+
+void BoidSolver::SetTurnInPoints(std::vector<AttractPoint>& points)
+{
+	m_turnInPoints = points;
 }
 
 Vector2 BoidSolver::CalculateSeparation(BoidData& inBoid, std::vector<BoidData*>& closeBoids)
@@ -108,18 +120,26 @@ Vector2 BoidSolver::CalculateAttractPoints(BoidData& inBoid)
 		return { 0,0 };
 
 	Vector2 result = { 0,0 };
-	float distance = std::numeric_limits<float>::max();
 	for (auto& point : m_attractPoints)
 	{
-		float newDistance = Vector2DistanceSqr(inBoid.position, point.position);
-		if (newDistance < distance)
-		{
-			distance = newDistance;
-			result = point.position;
-		}
+		Vector2 pointVector = (point.position - inBoid.position);
+		if (Vector2Distance(point.position, inBoid.position) - point.radius > m_radius)
+			continue;
+
+		result += Vector2Normalize(pointVector) * point.force;
 	}
 
-	return (result - inBoid.position) * 0.08f;
+	return result * 0.1f;
+}
+
+bool BoidSolver::ShouldBoidTurnIn(BoidData& inBoid)
+{
+	for (auto& point : m_turnInPoints)
+	{
+		if (Vector2Distance(point.position, inBoid.position) - point.radius <= m_radius)
+			return true;
+	}
+	return false;
 }
 
 void BoidSolver::GetCloseBoids(Vector2 position, std::vector<BoidData*>& closeBoids)
@@ -138,6 +158,9 @@ void BoidSolver::GetCloseBoids(Vector2 position, std::vector<BoidData*>& closeBo
 
 			for (auto& boid : m_grid[xCoord][yCoord])
 			{
+				if (boid->turnedIn)
+					continue;
+
 				float distance = Vector2DistanceSqr(position, boid->position);
 				if (distance > radiusSquared)
 					continue;
@@ -184,7 +207,11 @@ void BoidSolver::RenderBoids()
 {
 	for (auto& boid : GetBoidData())
 	{
-		DrawCircle(boid.position.x, boid.position.y, 1, YELLOW);
+		if (boid.turnedIn)
+			continue;
+
+		//DrawCircle(boid.position.x, boid.position.y, 1, YELLOW);
+		DrawCircleGradient(boid.position.x, boid.position.y, 5.0f, YELLOW, {253 / 2, 249 / 2, 0, 0});
 		//DrawLine(boid.position.x, boid.position.y, boid.position.x + boid.velocity.x, boid.position.y + boid.velocity.y, DARKBROWN); // Render velocities
 	}
 }

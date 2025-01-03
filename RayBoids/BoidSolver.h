@@ -10,11 +10,14 @@ struct BoidData
 {
 	Vector2 position;
 	Vector2 velocity;
+	bool turnedIn;
 };
 
 struct AttractPoint
 {
 	Vector2 position;
+	float force;
+	float radius;
 };
 
 class BoidSolver
@@ -31,21 +34,24 @@ private:
 	static const int GRIDCELLSIZE = 25;
 	std::array<std::array<std::vector<BoidData*>, GRIDHEIGHT>, GRIDWIDTH> m_grid;
 	
-	std::deque<AttractPoint> m_attractPoints;
+	std::vector<AttractPoint> m_attractPoints;
+	std::vector<AttractPoint> m_turnInPoints;
 
 public:
 
 	void Init(int numBoids, int sizeX, int sizeY);
 	void Update(float deltaTime);
 
-	void AddAttractPoint(AttractPoint& point);
-	void RemoveExpiredAttractPoints();
+	void SetAttractPoints(std::vector<AttractPoint>& points);
+	void SetTurnInPoints(std::vector<AttractPoint>& points);
 
 	Vector2 CalculateSeparation(BoidData& inBoid, std::vector<BoidData*>& closeBoids);
 	Vector2 CalculateAlignment(BoidData& inBoid, std::vector<BoidData*>& closeBoids);
 	Vector2 CalculateCohesion(BoidData& inBoid, std::vector<BoidData*>& closeBoids);
 	Vector2 CalculateBorderAvoidance(BoidData& inBoid);
 	Vector2 CalculateAttractPoints(BoidData& inBoid);
+
+	bool ShouldBoidTurnIn(BoidData& inBoid);
 
 	void GetCloseBoids(Vector2 position, std::vector<BoidData*>& closeBoids);
 	std::vector<BoidData>& GetBoidData() {	return m_boids; };
