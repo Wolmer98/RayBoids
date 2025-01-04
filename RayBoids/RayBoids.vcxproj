@@ -143,17 +143,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AttractorActor.cpp" />
     <ClCompile Include="BoidSolver.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="TurnInPoint.cpp" />
+    <ClCompile Include="PlayerActor.cpp" />
+    <ClCompile Include="TurnInActor.cpp" />
+    <ClCompile Include="WallActor.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttractorActor.h" />
     <ClInclude Include="BoidSolver.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="TurnInPoint.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="PlayerActor.h" />
+    <ClInclude Include="TurnInActor.h" />
+    <ClInclude Include="WallActor.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Levels\Level01.txt" />
+    <Text Include="Levels\LevelTemplate.txt" />
     <Text Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

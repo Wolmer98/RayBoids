@@ -21,10 +21,22 @@
     <ClCompile Include="BoidSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="PlayerActor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TurnInPoint.cpp">
+    <ClCompile Include="TurnInActor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AttractorActor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WallActor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,14 +44,28 @@
     <ClInclude Include="BoidSolver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="PlayerActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TurnInPoint.h">
+    <ClInclude Include="TurnInActor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AttractorActor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WallActor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="TODO.txt" />
+    <Text Include="Levels\Level01.txt" />
+    <Text Include="Levels\LevelTemplate.txt" />
   </ItemGroup>
 </Project>

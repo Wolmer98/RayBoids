@@ -16,8 +16,8 @@ struct BoidData
 struct AttractPoint
 {
 	Vector2 position;
-	float force;
 	float radius;
+	float force;
 };
 
 class BoidSolver
