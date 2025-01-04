@@ -55,6 +55,7 @@ public:
 
 	void GetCloseBoids(Vector2 position, std::vector<BoidData*>& closeBoids);
 	std::vector<BoidData>& GetBoidData() {	return m_boids; };
+	int GetTurnedInNumBoids();
 
 	Vector2 GetGridCoordinate(Vector2 position);
 	void BuildGrid(std::array<std::array<std::vector<BoidData*>, GRIDHEIGHT>, GRIDWIDTH>& grid);

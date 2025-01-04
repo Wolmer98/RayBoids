@@ -10,6 +10,13 @@
 #include "BoidSolver.h"
 #include "WallActor.h"
 
+enum WorldProgressState
+{
+    Ongoing,
+    Completed,
+    Failed
+};
+
 class World
 {
 private:
@@ -31,5 +38,8 @@ public:
 
     void Update();
     void Render();
+
+    
+    WorldProgressState GetWorldProgressState();
 };
 

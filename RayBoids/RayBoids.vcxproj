@@ -148,6 +148,7 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
+    <ClCompile Include="Resources.cpp" />
     <ClCompile Include="TurnInActor.cpp" />
     <ClCompile Include="WallActor.cpp" />
     <ClCompile Include="World.cpp" />
@@ -157,12 +158,12 @@
     <ClInclude Include="BoidSolver.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="PlayerActor.h" />
+    <ClInclude Include="Resources.h" />
     <ClInclude Include="TurnInActor.h" />
     <ClInclude Include="WallActor.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Levels\Level01.txt" />
     <Text Include="Levels\LevelTemplate.txt" />
     <Text Include="TODO.txt" />
   </ItemGroup>

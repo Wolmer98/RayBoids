@@ -88,3 +88,11 @@ void World::Render()
     if (IsKeyDown(KEY_T))
         m_solver->RenderTestPosition();
 }
+
+WorldProgressState World::GetWorldProgressState()
+{
+    if (m_solver->GetTurnedInNumBoids() >= m_solver->GetBoidData().size())
+        return WorldProgressState::Completed;
+
+    return WorldProgressState::Ongoing;
+}

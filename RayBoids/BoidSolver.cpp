@@ -134,6 +134,9 @@ Vector2 BoidSolver::CalculateAttractPoints(BoidData& inBoid)
 
 bool BoidSolver::ShouldBoidTurnIn(BoidData& inBoid)
 {
+	if (inBoid.position.x < 0 || inBoid.position.y < 0)
+		return true;
+
 	for (auto& point : m_turnInPoints)
 	{
 		if (Vector2Distance(point.position, inBoid.position) - point.radius <= m_radius)
@@ -169,6 +172,15 @@ void BoidSolver::GetCloseBoids(Vector2 position, std::vector<BoidData*>& closeBo
 			}
 		}
 	}
+}
+
+int BoidSolver::GetTurnedInNumBoids()
+{
+	int result = 0;
+	for (auto& boid : GetBoidData())
+		result += boid.turnedIn;
+
+	return result;
 }
 
 Vector2 BoidSolver::GetGridCoordinate(Vector2 position)

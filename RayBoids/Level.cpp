@@ -2,11 +2,20 @@
 #include <iostream>
 #include <fstream>
 
-World* Level::LoadLevel(std::string& path)
+std::unique_ptr<World> Level::LoadLevelByIndex(int levelIndex)
+{
+    std::string levelPath = std::format("Levels/Level{}.txt", levelIndex);
+    return Level::LoadLevel(levelPath);
+}
+
+std::unique_ptr<World> Level::LoadLevel(std::string& path)
 {
     std::ifstream file(path);
+    if (!file.is_open())
+        return nullptr;
+
     std::string line;
-    World* world = new World();
+    std::unique_ptr<World> world = std::make_unique<World>();
 
     float cellSize = 25.0f; // TODO
 
