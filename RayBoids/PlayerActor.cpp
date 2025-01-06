@@ -40,9 +40,7 @@ bool PlayerActor::IsPositionOverlapping(Vector2 position, std::vector<Rectangle>
 	for (auto& box : blockingBoxes)
 	{
 		if (CheckCollisionRecs(playerBox, box))
-		{
 			return true;
-		}
 	}
 	return false;
 }

@@ -55,9 +55,7 @@ int main()
         if (!gameFinished)
             world->Render();
         else
-        {
             DrawText("GAME FINISHED", screenWidth / 4.5f, screenHeight / 2.5, 80, RAYWHITE);
-        }
 
         if (IsKeyDown(KEY_F))
             DrawText(std::format("FPS: {} \n Num boids: {}", GetFPS(), world->GetNumBoids()).c_str(), 30, 30, 24, RED);
