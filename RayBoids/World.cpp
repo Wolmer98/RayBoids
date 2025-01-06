@@ -23,7 +23,7 @@ void World::SpawnPlayer(Vector2 position)
 
 void World::SpawnWall(Vector2 position)
 {
-    m_wallActors.push_back(std::make_unique<WallActor>(position, 25.0f, 25.0f));
+    m_wallActors.push_back(std::make_unique<WallActor>(position, 10.0f, 25.0f));
 }
 
 void World::Update()
@@ -32,10 +32,14 @@ void World::Update()
 
     // TODO: This update is doing a shit-ton of allocations. Maybe optimize later...
 
+    if (IsKeyPressed(KEY_I))
+        m_solver->Init(m_solver->GetBoidData().size() + 1000, GetScreenWidth(), GetScreenHeight());
+
     std::vector<Rectangle> blockingBoxes;
     for (auto& wall : m_wallActors)
     {
-        Rectangle box = Rectangle{ wall->GetPosition().x, wall->GetPosition().y, wall->GetRadius(), wall->GetRadius() };
+        float boxSize = wall->GetRadius();
+        Rectangle box = Rectangle{ wall->GetPosition().x - (boxSize * 0.5f), wall->GetPosition().y - (boxSize * 0.5f), boxSize, boxSize };
         blockingBoxes.push_back(box);
     }
     m_player->TryMove(blockingBoxes);

@@ -7,26 +7,34 @@
 
 int main()
 {
-    const int screenWidth = 1200;
-    const int screenHeight = 800;
+    const std::size_t screenWidth = 1200;
+    const std::size_t screenHeight = 800;
 
     InitWindow(screenWidth, screenHeight, "Fireflies");
-    SetTargetFPS(300);
+    SetTargetFPS(0);
 
+    InitAudioDevice();
     Resources::GetResources()->LoadResources();
     
+    PlayMusicStream(Resources::GetResources()->music);
+
     bool gameFinished = false;
-    int levelIndex = -1;
+    std::size_t levelIndex = -1;
     std::unique_ptr<World> world = nullptr;
 
     // Main game loop
     while (!WindowShouldClose()) // Detect window close button or ESC key
     {
         // -- Update -- //
+        UpdateMusicStream(Resources::GetResources()->music);
+
+        if (IsKeyPressed(KEY_R))
+            world = Level::LoadLevelByIndex(levelIndex);
+
         if (!gameFinished)
         {
             // Load next level
-            if (world == nullptr || world->GetWorldProgressState() == WorldProgressState::Completed)
+            if (world == nullptr || world->GetWorldProgressState() == WorldProgressState::Completed || IsKeyPressed(KEY_N))
             {
                 ++levelIndex;
                 world = Level::LoadLevelByIndex(levelIndex);
@@ -52,10 +60,11 @@ int main()
         }
 
         if (IsKeyDown(KEY_F))
-            DrawText(std::format("FPS: {}", GetFPS()).c_str(), 0, 0, 24, RED);
+            DrawText(std::format("FPS: {} \n Num boids: {}", GetFPS(), world->GetNumBoids()).c_str(), 30, 30, 24, RED);
 
         EndDrawing();
     }
 
+    CloseAudioDevice();
     CloseWindow();
 }

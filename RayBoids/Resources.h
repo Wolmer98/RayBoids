@@ -11,8 +11,11 @@ public:
 
     Texture2D backgroundTexture;
     Texture2D wallTexture;
+    Texture2D playerTexture;
+    Music music;
 
     static Resources* GetResources();
     void LoadResources();
+    void UnloadResources();
 };
 

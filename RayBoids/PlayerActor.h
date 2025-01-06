@@ -9,7 +9,7 @@ class PlayerActor
 private:
 
 	Vector2 m_position;
-	float m_movementSpeed = 400.0f;
+	float m_movementSpeed = 330.0f;
 	float m_playerSize = 30.0f;
 	float m_attractRadius = 200.0f;
 

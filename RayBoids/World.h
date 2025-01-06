@@ -39,7 +39,7 @@ public:
     void Update();
     void Render();
 
-    
+    std::size_t GetNumBoids() { return m_solver->GetBoidData().size(); } // For debug
     WorldProgressState GetWorldProgressState();
 };
 

@@ -5,12 +5,13 @@
 #include <algorithm>
 #include <iostream>
 
-void BoidSolver::Init(int numBoids, int sizeX, int sizeY)
+void BoidSolver::Init(std::size_t numBoids, std::size_t sizeX, std::size_t sizeY)
 {
 	m_sizeX = sizeX;
 	m_sizeY = sizeY;
 
-	for (int i = 0; i < numBoids; ++i)
+	m_boids.clear();
+	for (std::size_t i = 0; i < numBoids; ++i)
 		m_boids.push_back({{(float)(std::rand() % (sizeX - 50)), (float)(std::rand() % (sizeY - 50))}, {0.0f,0.0f}});
 		//m_boids.push_back({{(float)(std::rand() % (sizeX - 50)), (float)(std::rand() % (sizeY - 50))}, {(float)(std::rand() % 100),(float)(std::rand() % 200)}});
 }
@@ -19,15 +20,15 @@ void BoidSolver::Update(float deltaTime)
 {
 	BuildGrid(m_grid);
 
-	constexpr int THREADS = 1;
-	const int boidChunkSize = GetBoidData().size() / THREADS;
-	for (int i = 0; i < THREADS; ++i)
+	constexpr std::size_t THREADS = 1;
+	const std::size_t boidChunkSize = GetBoidData().size() / THREADS;
+	for (std::size_t i = 0; i < THREADS; ++i)
 	{
-		int startIndex = i * boidChunkSize;
+		std::size_t startIndex = i * boidChunkSize;
 		/*std::jthread worker = std::jthread([&]()
 		{*/
 			std::vector<BoidData*> closeBoids;
-			for (int boidIndex = startIndex; boidIndex < startIndex + boidChunkSize; ++boidIndex)
+			for (std::size_t boidIndex = startIndex; boidIndex < startIndex + boidChunkSize; ++boidIndex)
 			{
 				auto& boid = GetBoidData()[boidIndex];
 
@@ -73,7 +74,7 @@ Vector2 BoidSolver::CalculateSeparation(BoidData& inBoid, std::vector<BoidData*>
 	Vector2 result = { 0,0 };
 	for (auto& boid : closeBoids)
 		result += inBoid.position - boid->position;
-	return result * 0.7f;
+	return result * 0.3f;
 }
 
 Vector2 BoidSolver::CalculateAlignment(BoidData& inBoid, std::vector<BoidData*>& closeBoids)
@@ -83,7 +84,7 @@ Vector2 BoidSolver::CalculateAlignment(BoidData& inBoid, std::vector<BoidData*>&
 	for (auto& boid : closeBoids)
 		result += boid->velocity;
 	result /= (float)closeBoids.size();
-	return result * 0.0001f;
+	return result * 0.001f;
 }
 
 Vector2 BoidSolver::CalculateCohesion(BoidData& inBoid, std::vector<BoidData*>& closeBoids)
@@ -174,9 +175,9 @@ void BoidSolver::GetCloseBoids(Vector2 position, std::vector<BoidData*>& closeBo
 	}
 }
 
-int BoidSolver::GetTurnedInNumBoids()
+std::size_t BoidSolver::GetTurnedInNumBoids()
 {
-	int result = 0;
+	std::size_t result = 0;
 	for (auto& boid : GetBoidData())
 		result += boid.turnedIn;
 
@@ -206,9 +207,9 @@ void BoidSolver::BuildGrid(std::array<std::array<std::vector<BoidData*>, GRIDHEI
 		grid[coordinate.x][coordinate.y].push_back(&boid);
 	}
 
-	//for (int y = 0; y < GRIDHEIGHT; ++y)
+	//for (std::size_t y = 0; y < GRIDHEIGHT; ++y)
 	//{
-	//	for (int x = 0; x < GRIDWIDTH; ++x)
+	//	for (std::size_t x = 0; x < GRIDWIDTH; ++x)
 	//	{
 	//		grid[x][y].push_back()
 	//	}
@@ -239,9 +240,9 @@ void BoidSolver::RenderAttractPoints()
 
 void BoidSolver::RenderGrid()
 {
-	for (int y = 0; y < GRIDHEIGHT; ++y)
+	for (std::size_t y = 0; y < GRIDHEIGHT; ++y)
 	{
-		for (int x = 0; x < GRIDWIDTH; ++x)
+		for (std::size_t x = 0; x < GRIDWIDTH; ++x)
 		{
 			DrawRectangleLines(x * GRIDCELLSIZE, y * GRIDCELLSIZE, GRIDCELLSIZE - 1, GRIDCELLSIZE - 1, m_grid[x][y].size() > 0 ? PURPLE : DARKGRAY);
 			DrawText(std::format("{}", m_grid[x][y].size()).c_str(), x * GRIDCELLSIZE, y * GRIDCELLSIZE, 12, LIGHTGRAY);

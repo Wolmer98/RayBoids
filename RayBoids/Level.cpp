@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-std::unique_ptr<World> Level::LoadLevelByIndex(int levelIndex)
+std::unique_ptr<World> Level::LoadLevelByIndex(std::size_t levelIndex)
 {
     std::string levelPath = std::format("Levels/Level{}.txt", levelIndex);
     return Level::LoadLevel(levelPath);
@@ -19,10 +19,10 @@ std::unique_ptr<World> Level::LoadLevel(std::string& path)
 
     float cellSize = 25.0f; // TODO
 
-    int row = 0;
+    std::size_t row = 0;
     while (std::getline(file, line))
     {
-        int column = 0;
+        std::size_t column = 0;
         for (auto c : line)
         {
             Vector2 position = { cellSize * column, cellSize * row };

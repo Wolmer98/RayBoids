@@ -39,7 +39,7 @@ private:
 
 public:
 
-	void Init(int numBoids, int sizeX, int sizeY);
+	void Init(std::size_t numBoids, std::size_t sizeX, std::size_t sizeY);
 	void Update(float deltaTime);
 
 	void SetAttractPoints(std::vector<AttractPoint>& points);
@@ -55,7 +55,7 @@ public:
 
 	void GetCloseBoids(Vector2 position, std::vector<BoidData*>& closeBoids);
 	std::vector<BoidData>& GetBoidData() {	return m_boids; };
-	int GetTurnedInNumBoids();
+	std::size_t GetTurnedInNumBoids();
 
 	Vector2 GetGridCoordinate(Vector2 position);
 	void BuildGrid(std::array<std::array<std::vector<BoidData*>, GRIDHEIGHT>, GRIDWIDTH>& grid);

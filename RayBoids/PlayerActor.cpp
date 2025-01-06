@@ -1,5 +1,6 @@
 #include "PlayerActor.h"
 #include "raymath.h"
+#include "Resources.h"
 
 PlayerActor::PlayerActor(Vector2 InPosition)
 {
@@ -33,7 +34,8 @@ void PlayerActor::TryMove(std::vector<Rectangle>& blockingBoxes)
 
 bool PlayerActor::IsPositionOverlapping(Vector2 position, std::vector<Rectangle>& blockingBoxes)
 {
-	Rectangle playerBox = { position.x, position.y, m_playerSize, m_playerSize };
+	float collisionSize = m_playerSize + 10.0f;
+	Rectangle playerBox = { position.x - (collisionSize * 0.5f), position.y - (collisionSize * 0.5f), collisionSize, collisionSize };
 
 	for (auto& box : blockingBoxes)
 	{
@@ -47,6 +49,7 @@ bool PlayerActor::IsPositionOverlapping(Vector2 position, std::vector<Rectangle>
 
 void PlayerActor::Render()
 {
-	DrawRectangle(m_position.x - (m_playerSize * 0.5f), m_position.y - (m_playerSize * 0.5f), m_playerSize, m_playerSize, BLUE);
-	DrawCircleGradient(m_position.x, m_position.y, m_attractRadius, {128, 128, 128, 128}, {128, 128, 128, 0});
+	DrawCircleGradient(m_position.x, m_position.y, m_attractRadius, {128, 128, 128, 180}, {128, 128, 128, 0});
+	DrawTexture(Resources::GetResources()->playerTexture, m_position.x - (m_playerSize * 0.5f), m_position.y - (m_playerSize * 0.5f), WHITE);
+	//DrawRectangle(m_position.x - (m_playerSize * 0.5f), m_position.y - (m_playerSize * 0.5f), m_playerSize, m_playerSize, BLUE);
 }
